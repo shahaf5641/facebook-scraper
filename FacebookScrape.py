@@ -12,6 +12,12 @@ from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
 import time
  
+"""
+Collects amount of Facebook group links based on the number given and on provided search word.
+
+Returns:
+list: List of Facebook group links.
+"""
 def Get_FB_Group_Links():
     print(f"Collecting group links...")
     driver.get('https://www.facebook.com/groups/search/groups/?q=' + search_word)
@@ -33,8 +39,22 @@ def Get_FB_Group_Links():
     for i in range(group_links_number):
         # Extract the href attribute (URL) from the anchor element and append it to the list
         group_links.append(group_elements[i].get_attribute("href"))
-    
     return group_links
+
+"""
+Scrapes details from posts in a Facebook group.
+Args:
+group_link (str): The URL of the Facebook group.
+content_list (list): List to store post content.
+name_list (list): List to store post author names.
+post_links (list): List to store post links.
+post_times (list): List to store post timestamps.
+posts_number_requested (int): The number of posts requested.
+groupnum (int): The group index number.
+
+Returns:
+int: Remaining number of posts to be requested.
+"""
 
 def ScrapeGroupDetails(group_link, content_list, name_list, post_links,post_times, posts_number_requested, groupnum):
     driver.get(group_link)
