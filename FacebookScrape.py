@@ -199,6 +199,5 @@ table.reset_index(drop=True, inplace=True)
 table.to_csv("facebookposts.csv", index=False)
 print(f"Finised.\nTable size:{table_size-posts_not_added}")
 
-
 # Close the WebDriver
 driver.quit
