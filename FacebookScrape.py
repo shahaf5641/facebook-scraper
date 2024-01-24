@@ -48,7 +48,7 @@ def ScrapeGroupDetails(group_link, content_list, name_list, post_links,post_time
         #Checks if we reached to the last post we have in the list, if yes, get more posts to the list
         if i==len(posts):
             while i+postsnum>len(posts):
-                #Checking if we at same place
+                #Checking if web page is at the same place
                 start_position = driver.execute_script("return window.pageYOffset;")
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 current_position = driver.execute_script("return window.pageYOffset;")
@@ -65,7 +65,7 @@ def ScrapeGroupDetails(group_link, content_list, name_list, post_links,post_time
                     pass
             soup = BeautifulSoup(driver.page_source, "html.parser")
             all_posts = soup.find_all("div", {"class": "x1yztbdb x1n2onr6 xh8yej3 x1ja2u2z"})
-        #Extracting mame
+        #Extracting name
         try:
             name = all_posts[i].find("a", {
                 "class": "x1i10hfl xjbqb8w x6umtig x1b1mbwd xaqea5y xav7gou x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz xt0b8zv xzsf02u x1s688f"}).get_text(strip=True)
@@ -91,12 +91,14 @@ def ScrapeGroupDetails(group_link, content_list, name_list, post_links,post_time
             link=""
             post_time=""
 
-        #NEED TO DO VIDEO
+        #Checking to see if there is a video
         try:
             video = all_posts[i].find("div", {
             "class": "x1ey2m1c x10l6tqk x1d8287x x6o7n8i xl405pv xh8yej3 x11uqc5h x6s0dn4 xzt5al7 x78zum5 x1q0g3np"})
         except:
             video= None
+        
+        #Filters and adding to lists
         if content != "" and name != "" and content not in content_list and video==None:
             content_list.append(content)
             name_list.append(name)
@@ -151,13 +153,12 @@ try:
     )
 except Exception as e:
     print(f"Low internet connection {e}")
-    # Search for car-related groups
 
 print(f"Logged in succesfuly")
 #We at home page
 
 #Getting links
-car_group_links=Get_FB_Group_Links()
+GroupList=Get_FB_Group_Links()
 
 #Lists to store information
 content_list, name_list, post_links,post_times = [], [], [], []
@@ -165,7 +166,7 @@ posts_not_added=0
 print("Starting to process groups...")
 #Getting posts information from each group
 for j in range(group_links_number):
-    res = ScrapeGroupDetails(car_group_links[j], content_list, name_list, post_links, post_times,posts_from_each_group, j+1)
+    res = ScrapeGroupDetails(GroupList[j], content_list, name_list, post_links, post_times,posts_from_each_group, j+1)
     if res==0:
         print(f"Group number {j+1} has finished succesfuly\n")
     else:
